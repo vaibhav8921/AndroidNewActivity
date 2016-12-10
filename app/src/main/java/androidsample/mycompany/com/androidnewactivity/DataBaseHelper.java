@@ -1,74 +1,56 @@
 package androidsample.mycompany.com.androidnewactivity;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-/*
-import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
-import com.mongodb.WriteConcern;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.DBCursor;
+import com.mongodb.MongoClient;
 
-import com.mongodb.ServerAddress;
-*/
+import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Vaibhav on 12/3/2016.
  */
 
-public class DataBaseHelper extends SQLiteOpenHelper {
-    public DataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
-    }
+public class DataBaseHelper {
 
-/*
-    private static  final int DATABASE_VERSION = 1;
-    private static  final String DATABASE_NAME = "contacts.db";
-    private static  final String TABLE_NAME = "contacts.db";
-    private static  final String COLUMN_NAME= "name";
+    private static  final String COLUMN_NAME= "USERS_FIRSTNAME";
     private static  final String COLUMN_ID = "id";
-    private static  final String COLUMN_EMAIL= "email";
-    private static  final String COLUMN_UNAME = "uname";
-    private static  final String COLUMN_PASSWORD = "password";
-    SQLiteDatabase db;
-    private static  final String TABLE_CREATE = "create  table contacts(id integer primary key not null auto_increment,"+
-            "name text not null, email text not null,uname text not null,password text not null)";
+    private static  final String COLUMN_EMAIL= "USERS_EMAIL_ID";
+    private static  final String COLUMN_UNAME = "USERS_USER_USERNAME";
+    private static  final String COLUMN_PASSWORD = "USERS_USER_PASSWPRD";
 
-    public DataBaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
+    public void insertUserInfomation(Contact contact) throws UnknownHostException {
+       try{
+           // To connect to mongodb server
+           System.out.println("ENTRY:::::::");
+          // MongoClient mongoClient = new MongoClient( "localhost" , 5 );
+           MongoClient mongoClient = new MongoClient( "127.0.0.1" , 57918 );
+           System.out.println("11111");
+           DB db = mongoClient.getDB("users");
+           System.out.println("2222::");
+           DBCollection collection = db.getCollection("users");
+           System.out.println("Connection Established::");
 
-    public static String getColumnUname() {
-        return COLUMN_UNAME;
-    }
-*/
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-       /* try{
+           Map<String,String> contentValues = new HashMap<String, String>();
+           contentValues.put(COLUMN_NAME,contact.getName());
+           contentValues.put(COLUMN_EMAIL,contact.getEmail());
+           contentValues.put(COLUMN_UNAME,contact.getuName());
+           contentValues.put(COLUMN_PASSWORD,contact.getPassword());
+           System.out.println("contentValues::"+contentValues.toString());
 
-            // To connect to mongodb server
-            MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+           collection.insert(new BasicDBObject(contentValues));
+           System.out.println("Inserted Successfully::");
 
-            // Now connect to your databases
-            DB db = mongoClient.getDB( "test" );
-            System.out.println("Connect to database successfully");
-            boolean auth = db.authenticate(myUserName, myPassword);
-            System.out.println("Authentication: "+auth);
+           // parseJSON_Example(collection);
 
         }catch(Exception e){
+           System.out.println("Inside Errorchopraaaaaaaaaaaaaa");
+           e.printStackTrace();
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-        }*/
-
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        }
     }
 
 
