@@ -3,11 +3,16 @@ package androidsample.mycompany.com.androidnewactivity;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoDatabase;
 
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by Vaibhav on 12/3/2016.
@@ -15,41 +20,36 @@ import java.util.Map;
 
 public class DataBaseHelper {
 
-    private static  final String COLUMN_NAME= "USERS_FIRSTNAME";
-    private static  final String COLUMN_ID = "id";
-    private static  final String COLUMN_EMAIL= "USERS_EMAIL_ID";
-    private static  final String COLUMN_UNAME = "USERS_USER_USERNAME";
-    private static  final String COLUMN_PASSWORD = "USERS_USER_PASSWPRD";
 
     public void insertUserInfomation(Contact contact) throws UnknownHostException {
-       try{
-           // To connect to mongodb server
-           System.out.println("ENTRY:::::::");
-          // MongoClient mongoClient = new MongoClient( "localhost" , 5 );
-           MongoClient mongoClient = new MongoClient( "127.0.0.1" , 57918 );
-           System.out.println("11111");
-           DB db = mongoClient.getDB("users");
-           System.out.println("2222::");
-           DBCollection collection = db.getCollection("users");
-           System.out.println("Connection Established::");
+        try {
+            // To connect to mongodb server
+            System.out.println("Inside insertUserInfomation");
+            //MongoClient mongoClient = new MongoClient("192.168.29.242", 27017);
+            /*MongoCredential credential = MongoCredential.createCredential("admin", "admin", "admin123".toCharArray());
+            MongoClient mongoClient = new MongoClient( new ServerAddress("192.168.29.242", 27017), Arrays.asList(credential));
+            Iterator i= mongoClient.listDatabaseNames().iterator();
+            while (i.hasNext()){
+                System.out.println("DATABASE"+(String) i.next());
+            }*/
+            MongoClient mongo = new MongoClient( "192.168.29.242" , 27017 );
+            DB db = mongo.getDB("test");
+            DBCollection table = db.getCollection("user");
+
+            BasicDBObject searchQuery = new BasicDBObject();
+            searchQuery.put("USERS_FIRSTNAME", "Vaibhav");
+
+            DBCursor cursor = table.find(searchQuery);
+
+            while (cursor.hasNext()) {
+                System.out.println(cursor.next());
+            }
 
 
-           Map<String,String> contentValues = new HashMap<String, String>();
-           contentValues.put(COLUMN_NAME,contact.getName());
-           contentValues.put(COLUMN_EMAIL,contact.getEmail());
-           contentValues.put(COLUMN_UNAME,contact.getuName());
-           contentValues.put(COLUMN_PASSWORD,contact.getPassword());
-           System.out.println("contentValues::"+contentValues.toString());
+            // parseJSON_Example(collection);
 
-           collection.insert(new BasicDBObject(contentValues));
-           System.out.println("Inserted Successfully::");
-
-           // parseJSON_Example(collection);
-
-        }catch(Exception e){
-           System.out.println("Inside Errorchopraaaaaaaaaaaaaa");
-           e.printStackTrace();
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
