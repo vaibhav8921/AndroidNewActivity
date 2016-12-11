@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Vaibhav on 12/3/2016.
  */
 
-public class DataBaseHelper {
+public class DataBaseHelper  {
 
 
     public void insertUserInfomation(Contact contact) throws UnknownHostException {
@@ -32,7 +32,7 @@ public class DataBaseHelper {
             while (i.hasNext()){
                 System.out.println("DATABASE"+(String) i.next());
             }*/
-            MongoClient mongo = new MongoClient( "192.168.29.242" , 27017 );
+            /*MongoClient mongo = new MongoClient( "192.168.29.242" , 27017 );
             DB db = mongo.getDB("test");
             DBCollection table = db.getCollection("user");
 
@@ -45,7 +45,7 @@ public class DataBaseHelper {
                 System.out.println(cursor.next());
             }
 
-
+*/
             // parseJSON_Example(collection);
 
         } catch (Exception e) {

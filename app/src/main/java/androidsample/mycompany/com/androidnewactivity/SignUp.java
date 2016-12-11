@@ -1,12 +1,21 @@
 package androidsample.mycompany.com.androidnewactivity;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.MongoClient;
+
 import java.net.UnknownHostException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Vaibhav on 12/3/2016.
@@ -53,12 +62,44 @@ public class SignUp extends Activity{
                 System.out.println("contact::"+contact.toString());
                 try {
                     dataBaseHelper.insertUserInfomation(contact);
+                    new DBExcutor().execute("");
                 } catch (UnknownHostException e) {
                     System.out.println("Inside Error::"+contact.toString());
                     e.printStackTrace();
                 }
             }
 
+        }
+    }
+
+
+    private class DBExcutor extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            MongoClient mongo = new MongoClient( "192.168.29.242" , 27017 );
+            DB db = mongo.getDB("test");
+            DBCollection table = db.getCollection("user");
+
+
+            Set<String> dbNames=  db.getCollectionNames();
+            for(String dbname : dbNames)
+            {
+                System.out.println("dbname "+dbname);
+            }
+            BasicDBObject document = new BasicDBObject();
+            document.put("USERS_FIRSTNAME", "mkyong");
+            document.put("USERS_USER_USERNAME", "adsf");
+            document.put("USERS_USER_PASSWPRD", "asd");
+            document.put("USERS_UID", "asda");
+            table.insert(document);
+            /**
+             *    "USERS_EMAIL_ID" : "vaibhav8921@gmail.com",
+             "USERS_USER_USERNAME" : "vaibhav8921",
+             "USERS_USER_PASSWPRD" : "Edison123",
+             "USERS_UID" : "vai_01"
+             */
+            return  null;
         }
     }
 }
