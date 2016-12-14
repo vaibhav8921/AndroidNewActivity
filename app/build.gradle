@@ -27,6 +27,7 @@ dependencies {
     compile files('libs/mongo-java-driver-3.4.0-SNAPSHOT.jar')
 
     compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.google.android.gms:play-services:7.8.0'
     testCompile 'junit:junit:4.12'
 }
 

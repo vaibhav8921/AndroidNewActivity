@@ -1,56 +1,73 @@
 package androidsample.mycompany.com.androidnewactivity;
 
+import android.os.AsyncTask;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
-import com.mongodb.client.MongoDatabase;
 
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Vaibhav on 12/3/2016.
  */
 
-public class DataBaseHelper  {
+public class DataBaseHelper  extends AsyncTask<Contact, Void, Void> {
 
+    private static  final String COLUMN_NAME= "USERS_FIRSTNAME";
+    private static  final String COLUMN_ID = "id";
+    private static  final String COLUMN_EMAIL= "USERS_EMAIL_ID";
+    private static  final String COLUMN_UNAME = "USERS_USER_USERNAME";
+    private static  final String COLUMN_PASSWORD = "USERS_USER_PASSWPRD";
+    private static  final String COLUMN_UID = "USERS_UID";
 
-    public void insertUserInfomation(Contact contact) throws UnknownHostException {
-        try {
+    @Override
+    protected Void doInBackground(Contact... params) {
+        try{
             // To connect to mongodb server
-            System.out.println("Inside insertUserInfomation");
-            //MongoClient mongoClient = new MongoClient("192.168.29.242", 27017);
-            /*MongoCredential credential = MongoCredential.createCredential("admin", "admin", "admin123".toCharArray());
-            MongoClient mongoClient = new MongoClient( new ServerAddress("192.168.29.242", 27017), Arrays.asList(credential));
-            Iterator i= mongoClient.listDatabaseNames().iterator();
-            while (i.hasNext()){
-                System.out.println("DATABASE"+(String) i.next());
-            }*/
-            /*MongoClient mongo = new MongoClient( "192.168.29.242" , 27017 );
-            DB db = mongo.getDB("test");
-            DBCollection table = db.getCollection("user");
+            System.out.println("ENTRY:::::::");
+            // MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+            MongoClient mongoClient = new MongoClient( "192.168.1.8" , 27017 );
+            //MongoClient mongoClient = new MongoClient( "127.0.0.1" , 27017 );
+            System.out.println("11111");
+            DB db = mongoClient.getDB("users");
+            System.out.println("2222::");
+            DBCollection collection = db.getCollection("users");
+            String uniqueID = UUID.randomUUID().toString();
 
-            BasicDBObject searchQuery = new BasicDBObject();
-            searchQuery.put("USERS_FIRSTNAME", "Vaibhav");
+            Map<String,String> contentValues = new HashMap<>();
+            contentValues.put(COLUMN_NAME,params[0].getName());
+            contentValues.put(COLUMN_EMAIL,params[0].getEmail());
+            contentValues.put(COLUMN_UNAME,params[0].getuName());
+            contentValues.put(COLUMN_PASSWORD,params[0].getPassword());
+            contentValues.put(COLUMN_UID,uniqueID);
+            System.out.println("contentValues::"+contentValues.toString());
 
-            DBCursor cursor = table.find(searchQuery);
+            if(!isNullOrEmpty( contentValues)){
+                collection.insert(new BasicDBObject(contentValues));
 
-            while (cursor.hasNext()) {
-                System.out.println(cursor.next());
             }
+            System.out.println("Inserted Successfully::");
 
-*/
             // parseJSON_Example(collection);
 
-        } catch (Exception e) {
+        }catch(Exception e){
+            System.out.println("Inside Errorchopraaaaaaaaaaaaaa");
             e.printStackTrace();
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            /*if(e.getMessage().contains("E11000 duplicate key error collection")){
+                throw new Exception("Duplicate Record");
+            }*/
+
+
         }
+        return null;
+    }
+    public static boolean isNullOrEmpty( final Map< ?, ? > m ) {
+        return m == null || m.isEmpty();
     }
 
 

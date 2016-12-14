@@ -5,6 +5,16 @@ package androidsample.mycompany.com.androidnewactivity;
  */
 
 public class Contact {
+
+
+    public Contact(String name, String email, String uName, String password) {
+
+        this.name = name;
+        this.email = email;
+        this.uName = uName;
+        this.password = password;
+    }
+
     int id;
     String name;
     String email;
