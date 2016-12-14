@@ -1,6 +1,8 @@
 package androidsample.mycompany.com.androidnewactivity;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -15,7 +17,8 @@ import java.util.UUID;
  * Created by Vaibhav on 12/3/2016.
  */
 
-public class DataBaseHelper  extends AsyncTask<Contact, Void, Void> {
+public class DataBaseHelper  extends AsyncTask<Contact, Void, AsyncTaskResult> {
+
 
     private static  final String COLUMN_NAME= "USERS_FIRSTNAME";
     private static  final String COLUMN_ID = "id";
@@ -24,9 +27,20 @@ public class DataBaseHelper  extends AsyncTask<Contact, Void, Void> {
     private static  final String COLUMN_PASSWORD = "USERS_USER_PASSWPRD";
     private static  final String COLUMN_UID = "USERS_UID";
 
+    static Context mContext;
+
+
+    public DataBaseHelper(final Context context)
+    {
+        mContext = context;
+    }
+
     @Override
-    protected Void doInBackground(Contact... params) {
+    protected AsyncTaskResult doInBackground(Contact... params) {
+        AsyncTaskResult asyncTaskResult =null;
         try{
+             asyncTaskResult = new AsyncTaskResult();
+            asyncTaskResult.setResult(AsyncTaskResult.RESULT_ENUM.SUCCESS);
             // To connect to mongodb server
             System.out.println("ENTRY:::::::");
             // MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
@@ -57,17 +71,27 @@ public class DataBaseHelper  extends AsyncTask<Contact, Void, Void> {
         }catch(Exception e){
             System.out.println("Inside Errorchopraaaaaaaaaaaaaa");
             e.printStackTrace();
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            /*if(e.getMessage().contains("E11000 duplicate key error collection")){
-                throw new Exception("Duplicate Record");
-            }*/
+            asyncTaskResult.setResult(AsyncTaskResult.RESULT_ENUM.FAILURE);
+            asyncTaskResult.setError(e);
 
           /*  Query for making fields  unique
             db.users.createIndex({USERS_EMAIL_ID:1},{unique:true});*/
 
 
         }
-        return null;
+        return asyncTaskResult;
+    }
+
+    @Override
+    protected void onPostExecute(AsyncTaskResult result) {
+
+        if(result.getResult().equals(AsyncTaskResult.RESULT_ENUM.FAILURE))
+        {
+            System.out.println("Inside post execution");
+             Toast.makeText(mContext,result.getError().getMessage(),Toast.LENGTH_LONG).show();
+        }
+
+
     }
     public static boolean isNullOrEmpty( final Map< ?, ? > m ) {
         return m == null || m.isEmpty();
