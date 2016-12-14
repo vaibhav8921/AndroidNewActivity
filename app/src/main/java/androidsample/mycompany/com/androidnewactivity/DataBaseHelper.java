@@ -62,6 +62,9 @@ public class DataBaseHelper  extends AsyncTask<Contact, Void, Void> {
                 throw new Exception("Duplicate Record");
             }*/
 
+          /*  Query for making fields  unique
+            db.users.createIndex({USERS_EMAIL_ID:1},{unique:true});*/
+
 
         }
         return null;
