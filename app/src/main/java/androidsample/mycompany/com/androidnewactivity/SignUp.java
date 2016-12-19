@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 public class SignUp extends Activity{
 
-    DataBaseHelper dataBaseHelper = new DataBaseHelper();
 
     protected  void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -54,7 +53,7 @@ public class SignUp extends Activity{
                    // new DataBaseHelper().execute(new Contact());
 
 
-                    DataBaseHelper myTask = new DataBaseHelper();
+                    DataBaseHelper myTask = new DataBaseHelper(this.getBaseContext());
                     myTask.execute(contact);
                 } catch (Exception e) {
                     System.out.println("Inside Error::"+contact.toString());
